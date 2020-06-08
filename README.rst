@@ -31,13 +31,13 @@ Usage
 
 .. code-block:: bash
 
-    pre-commit-run-hook-entry <hook>
+    pre-commit-run-hook-entry HOOK
 
 Prerequisites
 -------------
 
 ``pre-commit-run-hook-entry`` only works in directories, where
-``pre-commit run --all <hook>`` is executable.
+``pre-commit run --all HOOK`` is executable.
 
 VS Code Integration
 -------------------
@@ -66,7 +66,7 @@ Sublime Text 3 Integration
 sublack
 ~~~~~~~
 
-From one point `sublack <https://github.com/jgirardet/sublack/>`_ has builtin
+From one point `sublack <https://github.com/jgirardet/sublack/>`__ has builtin
 pre-commit integration, but it seems do not respect settings from
 ``pyproject.toml``, to fix this use ``pre-commit-run-black-entry`` as
 ``sublack.black_command``,
@@ -85,7 +85,7 @@ SublimeLinter-contrib-flake8
 
     {
         "SublimeLinter.linters.flake8.executable": "pre-commit-run-hook-entry",
-        "SublimeLinter.linters.flake8.args": ["--", "flake8"],
+        "SublimeLinter.linters.flake8.args": ["--", "flake8"]
     }
 
 
@@ -96,7 +96,7 @@ SublimeLinter-contrib-mypy
 
     {
         "SublimeLinter.linters.mypy.executable": "pre-commit-run-hook-entry",
-        "SublimeLinter.linters.mypy.args": ["--", "mypy"],
+        "SublimeLinter.linters.mypy.args": ["--", "mypy"]
     }
 
 Issues & Feature Requests

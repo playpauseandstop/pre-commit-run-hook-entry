@@ -40,13 +40,13 @@ repos:
       - id: "flake8"
         name: "Lint code (flake8)"
         language_version: "python3.8"
-        additional_dependencies:
+        additional_dependencies: &flake8_additional_dependencies
           - "flake8==3.8.2"
           - "flake8-broken-line==0.2.0"
           - "flake8-bugbear==20.1.4"
           - "flake8-builtins==1.5.3"
-          - "flake8-comprehensions==3.2.2"
-          - "flake8-eradicate==0.3.0"
+          - "flake8-comprehensions==3.2.3"
+          - "flake8-eradicate==0.4.0"
           - "flake8-import-order==0.18.1"
           - "flake8-mutable==1.2.0"
           - "flake8-pie==0.5.0"
@@ -55,6 +55,15 @@ repos:
           - "flake8-tidy-imports==4.1.0"
           - "flake8-variables-names==0.0.3"
           - "pep8-naming==0.10.0"
+        exclude: ^docs/.*$
+
+  - repo: "https://github.com/asottile/yesqa"
+    rev: "v1.2.0"
+    hooks:
+      - id: yesqa
+        name: "Lint code (yesqa)"
+        language_version: "python3.8"
+        additional_dependencies: *flake8_additional_dependencies
         exclude: ^docs/.*$
 
   - repo: "https://github.com/pre-commit/mirrors-mypy"
@@ -67,3 +76,10 @@ repos:
           "--python-executable=.venv/bin/python"
         ]
         exclude: ^docs/.*$
+
+  - repo: "https://github.com/myint/rstcheck"
+    rev: "3f92957478422df87bd730abde66f089cc1ee19b"
+    hooks:
+      - id: "rstcheck"
+        name: "Lint docs (rstcheck)"
+        language_version: "python3.8"
