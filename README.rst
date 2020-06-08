@@ -2,6 +2,30 @@
 pre-commit-run-hook-entry
 =========================
 
+.. image:: https://github.com/playpauseandstop/pre-commit-run-hook-entry/workflows/ci/badge.svg
+    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/actions?query=workflow%3A%22ci%22
+    :alt: CI Workflow
+
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :target: https://github.com/pre-commit/pre-commit
+    :alt: pre-commit
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    :alt: black
+
+.. image:: https://img.shields.io/pypi/v/pre-commit-run-hook-entry.svg
+    :target: https://pypi.org/project/pre-commit-run-hook-entry/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/pyversions/pre-commit-run-hook-entry.svg
+    :target: https://pypi.org/project/pre-commit-run-hook-entry/
+    :alt: Python versions
+
+.. image:: https://img.shields.io/pypi/l/pre-commit-run-hook-entry.svg
+    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/blob/master/LICENSE
+    :alt: BSD License
+
 Run `pre-commit`_ hook entry. Allow to run pre-commit hooks for text editor
 formatting / linting needs.
 
@@ -102,5 +126,5 @@ SublimeLinter-contrib-mypy
 Issues & Feature Requests
 =========================
 
-`playpauseandstop/pre-commit-run-hook-entry @ GitHub
+Feel free to submit new issue or feature request `at GitHub
 <https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues>`_
