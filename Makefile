@@ -2,6 +2,7 @@
 
 POETRY ?= poetry
 PRE_COMMIT ?= pre-commit
+PYTHON ?= $(POETRY) run python
 
 install: .install
 .install: pyproject.toml poetry.lock
@@ -15,4 +16,4 @@ lint-only:
 
 test: lint test-only
 test-only:
-	echo "All OK!"
+	$(PYTHON) -m pytest --cov --no-cov-on-fail

@@ -1,6 +1,18 @@
 [tool.black]
 line_length = 79
 
+[tool.coverage.run]
+branch = true
+source = ["pre_commit_run_hook_entry"]
+
+[tool.coverage.paths]
+source = ["pre_commit_run_hook_entry.py"]
+
+[tool.coverage.report]
+fail_under = 85
+skip_covered = true
+show_missing = true
+
 [tool.poetry]
 name = "pre-commit-run-hook-entry"
 version = "1.0.0a1"
@@ -23,10 +35,13 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6.1"
+python = "^3.7"
 pre-commit = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
+coverage = {extras = ["toml"], version = "^5.1"}
+pytest = "^5.4.3"
+pytest-cov = "^2.9.0"
 
 [tool.poetry.scripts]
 pre-commit-run-black-entry = "pre_commit_run_hook_entry:main_black"

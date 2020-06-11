@@ -3,6 +3,7 @@
 	[
 		{
             "file_exclude_patterns": [
+                ".coverage*",
                 ".install",
                 "poetry.lock"
             ],

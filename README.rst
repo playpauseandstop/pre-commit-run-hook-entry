@@ -26,6 +26,10 @@ pre-commit-run-hook-entry
     :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/blob/master/LICENSE
     :alt: BSD License
 
+.. image:: https://coveralls.io/repos/playpauseandstop/pre-commit-run-hook-entry/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/playpauseandstop/pre-commit-run-hook-entry
+    :alt: Coverage
+
 Run `pre-commit`_ hook entry. Allow to run pre-commit hooks for text editor
 formatting / linting needs.
 
@@ -34,7 +38,7 @@ formatting / linting needs.
 Requirements
 ============
 
-- `Python <https://www.python.org/>`_ 3.6.1 or later
+- `Python <https://www.python.org/>`_ 3.7 or later
 - `pre-commit`_ 2.4.0 or later
 
 License

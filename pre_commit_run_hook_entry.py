@@ -80,18 +80,6 @@ def find_hook(args: argparse.Namespace, store: Store) -> Hook:
 
 
 def get_args(argv: Argv) -> Tuple[str, Argv]:
-    """
-    >>> get_args(["black"])
-    ("black", [])
-    >>> get_args(["mypy", "+"])
-    ("mypy", ["+"])
-    >>> get_args(["black", "--", "--diff", "--quiet", "file.py"])
-    ("black", ["--diff", "--quiet", "file.py"])
-    >>> get_args(["--diff", "--quiet", "file.py", "--", "black"])
-    ("black", ["--diff", "--quiet", "file.py"])
-    >>> get_args(["--format", "default", "--", "flake8", "-"])
-    ("flake8", ["--format", "default", "-"])
-    """
     if ARG_BREAK not in argv:
         return (argv[0], argv[1:])
 
@@ -100,7 +88,7 @@ def get_args(argv: Argv) -> Tuple[str, Argv]:
         return (argv[0], argv[2:])
 
     next_idx = idx + 2
-    return (argv[idx + 1], (*argv[:idx], *argv[next_idx:]))
+    return (argv[idx + 1], [*argv[:idx], *argv[next_idx:]])
 
 
 def get_pre_commit_args(
@@ -240,5 +228,5 @@ def usage() -> int:
     return 1
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     sys.exit(main())
