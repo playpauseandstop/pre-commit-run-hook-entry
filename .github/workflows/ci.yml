@@ -153,6 +153,11 @@ jobs:
           echo "::set-output name=subject::${subject}"
 
           body=$(git tag -l --format="%(body)" ${tag_name})
+          # Preserve multiline strings as per
+          # https://github.community/t/set-output-truncates-multiline-strings/16852/5
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
           echo "::set-output name=body::${body}"
 
           prerelease=false
