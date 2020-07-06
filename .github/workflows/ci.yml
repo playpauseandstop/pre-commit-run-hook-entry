@@ -71,19 +71,23 @@ jobs:
           poetry install
 
       - name: "Cache pre-commit"
-        if: "matrix.python-version == env.DEV_PYTHON_VERSION"
         uses: "actions/cache@v2.0.0"
         with:
           path: "~/.cache/pre-commit"
           key: "pre-commit-${{ matrix.python-version }}-${{ hashFiles('.pre-commit-config.yaml') }}"
 
       - name: "Run pre-commit"
-        if: "matrix.python-version == env.DEV_PYTHON_VERSION"
         uses: "pre-commit/action@v1.0.1"
 
       - name: "Run tests"
-        if: "matrix.python-version == env.DEV_PYTHON_VERSION"
-        run: "poetry run python -m pytest --cov --no-cov-on-fail"
+        run: |
+          set -e
+
+          if [ "${{ matrix.python-version }}" != "${{ env.DEV_PYTHON_VERSION }}" ]; then
+            export PYTEST_ADDOPTS="--no-cov"
+          fi
+
+          poetry run python -m pytest
 
       - name: "Send report to coveralls"
         if: "matrix.python-version == env.DEV_PYTHON_VERSION"

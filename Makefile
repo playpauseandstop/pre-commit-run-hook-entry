@@ -17,4 +17,4 @@ lint-only:
 
 test: lint test-only
 test-only:
-	$(PYTHON) -m pytest --cov --no-cov-on-fail
+	$(PYTHON) -m pytest
