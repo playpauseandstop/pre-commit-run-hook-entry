@@ -6,6 +6,7 @@ PYTHON ?= $(POETRY) run python
 
 install: .install
 .install: pyproject.toml poetry.lock
+	$(POETRY) config --local virtualenvs.create true
 	$(POETRY) config --local virtualenvs.in-project true
 	$(POETRY) install
 	touch $@

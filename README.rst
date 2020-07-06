@@ -35,6 +35,16 @@ formatting / linting needs.
 
 .. _`pre-commit`: https://pre-commit.com/
 
+Danger Zone
+===========
+
+**IMPORTANT:** This is highly experimental tool as `pre-commit internals does
+not intend to be used in other scripts
+<https://github.com/pre-commit/pre-commit/issues/1468#issuecomment-640699437>`_.
+It might be broken after new pre-commit release.
+
+**TO USE WITH CAUTION!**
+
 Requirements
 ============
 
@@ -59,7 +69,8 @@ Usage
 
 .. code-block:: bash
 
-    pre-commit-run-hook-entry HOOK
+    pre-commit-run-hook-entry HOOK [ARGS]
+    pre-commit-which-hook-entry HOOK
 
 Prerequisites
 -------------
@@ -106,8 +117,8 @@ pre-commit integration, but it seems do not respect settings from
     }
 
 
-SublimeLinter-contrib-flake8
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SublimeLinter-flake8
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: json
 
@@ -126,6 +137,49 @@ SublimeLinter-contrib-mypy
         "SublimeLinter.linters.mypy.executable": "pre-commit-run-hook-entry",
         "SublimeLinter.linters.mypy.args": ["--", "mypy"]
     }
+
+SublimeJsPrettier
+~~~~~~~~~~~~~~~~~
+
+First, you need to find out path to prettier hook entry with,
+
+.. code-block:: bash
+
+    pre-commit-which-hook-entry prettier
+
+Then, paste command output (``<OUTPUT>``) into plugin config,
+
+.. code-block:: json
+
+    {
+        "js_prettier": {
+            "prettier_cli_path": "<OUTPUT>"
+        }
+    }
+
+SublimeLinter-eslint
+~~~~~~~~~~~~~~~~~~~~
+
+First, you need to find out path to eslint hook entry with,
+
+.. code-block:: bash
+
+    pre-commit-which-hook-entry eslint
+
+Then, paste command output (``<OUTPUT>``) into plugin config,
+
+.. code-block:: json
+
+    {
+        "SublimeLinter.linters.eslint.executable": "<OUTPUT>",
+        "SublimeLinter.linters.eslint.env": {
+            "NODE_PATH": "<OUTPUT>/../../lib/node_modules"
+        }
+    }
+
+**IMPORTANT:** If you're using any ``additionalDependencies`` for eslint hook,
+you need to configure ``NODE_PATH``, so plugin will be able to find out given
+dependencies.
 
 Issues & Feature Requests
 =========================

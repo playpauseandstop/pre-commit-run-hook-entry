@@ -15,7 +15,7 @@ show_missing = true
 
 [tool.poetry]
 name = "pre-commit-run-hook-entry"
-version = "1.0.0a1"
+version = "1.0.0a2"
 description = "Run pre-commit hook entry. Allow to run pre-commit hooks for text editor formatting / linting needs."
 authors = ["Igor Davydenko <iam@igordavydenko.com>"]
 license = "BSD-3-Clause"
@@ -46,6 +46,7 @@ pytest-cov = "^2.9.0"
 [tool.poetry.scripts]
 pre-commit-run-black-entry = "pre_commit_run_hook_entry:main_black"
 pre-commit-run-hook-entry = "pre_commit_run_hook_entry:main"
+pre-commit-which-hook-entry = "pre_commit_run_hook_entry:main_which"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues"

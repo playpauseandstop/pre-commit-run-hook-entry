@@ -127,6 +127,7 @@ def main(
     argv: Argv = None,
     *,
     pre_commit_config_yaml: Path = None,
+    hook_entry_func: Callable[[Hook], str] = None,
     tmp_path_func: Callable[[Path], None] = None,
 ) -> int:
     if argv is None:
@@ -136,12 +137,12 @@ def main(
         return usage()
 
     with hook_context(argv) as ctx:
-        hook, extra_args, tmp_path = ctx
-        if hook.startswith("-"):
+        hook_name, extra_args, tmp_path = ctx
+        if hook_name.startswith("-"):
             return usage()
 
         pre_commit_args = get_pre_commit_args(
-            hook, config=pre_commit_config_yaml
+            hook_name, config=pre_commit_config_yaml
         )
 
         with error_handler(), logging_handler(pre_commit_args.color):
@@ -151,9 +152,14 @@ def main(
             with store.exclusive_lock():
                 store.mark_config_used(pre_commit_args.config)
 
-            original_hook = find_hook(pre_commit_args, store)
+            hook = find_hook(pre_commit_args, store)
             retcode, out = run_hook(
-                patch_hook(original_hook, extra_args), pre_commit_args.color
+                patch_hook(
+                    hook,
+                    extra_args=extra_args,
+                    entry=hook_entry_func(hook) if hook_entry_func else None,
+                ),
+                pre_commit_args.color,
             )
 
             if tmp_path and tmp_path_func:
@@ -204,10 +210,40 @@ def main_black(argv: Argv = None) -> int:
     )
 
 
-def patch_hook(hook: Hook, extra_args: Argv) -> Hook:
-    patched = Hook(*hook)
-    patched.args.extend(extra_args)
-    return patched
+def main_which(argv: Argv = None) -> int:
+    """Find out hook entry full path.
+
+    This is useful for cases, when ``pre-commit-run-hook-entry`` cannot be used
+    as command for text editor formatting / linting tool, such as for
+    `SublimeLinter-eslint
+    <https://github.com/SublimeLinter/SublimeLinter-eslint>`_.
+
+    In that case, you need to run,
+
+    .. code-block:: bash
+
+        pre-commit-which-hook-entry HOOK
+
+    and then paste output into tool config.
+    """
+
+    def which_entry(hook: Hook) -> str:
+        return f"which {hook.entry}"
+
+    return main(argv, hook_entry_func=which_entry)
+
+
+def patch_hook(
+    hook: Hook, *, extra_args: Argv = None, entry: str = None
+) -> Hook:
+    patched = hook._asdict()
+
+    if extra_args:
+        patched["args"].extend(extra_args)
+    if entry:
+        patched["entry"] = entry
+
+    return Hook(**patched)
 
 
 def redirect_stdin_to_temp_file() -> Path:
