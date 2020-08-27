@@ -1,6 +1,18 @@
 1.0.0 (In Development)
 ======================
 
+1.0.0a3 (2020-08-27)
+--------------------
+
+**Features:**
+
+- Support latest pre-commit 2.7.1
+
+**Other:**
+
+- Do not provide language version for pre-commit hooks (`#12 <https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues/12>`_)
+- Update github actions versions to use
+
 1.0.0a2 (2020-07-06)
 --------------------
 
