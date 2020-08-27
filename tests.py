@@ -106,7 +106,6 @@ def test_pre_commit_run_black_entry_stdin(tmp_path):
         ["mypy", "--", "pre_commit_run_hook_entry.py"],
         ["check-toml", "--", "pyproject.toml"],
         ["check-yaml", "--", ".pre-commit-config.yaml"],
-        ["rstcheck", "--", "README.rst"],
     ),
 )
 def test_pre_commit_run_hook_entry(args):

@@ -15,12 +15,12 @@ from typing import (
 
 from pre_commit import git
 from pre_commit.clientlib import load_config
+from pre_commit.color import add_color_option
 from pre_commit.error_handler import error_handler
 from pre_commit.hook import Hook
 from pre_commit.languages.all import languages
 from pre_commit.logging_handler import logging_handler
 from pre_commit.main import (
-    _add_color_option,
     _add_config_option,
     _add_run_options,
 )
@@ -41,7 +41,7 @@ Argv = Sequence[str]
 __prog__ = "pre-commit-run-hook-entry"
 __author__ = "Igor Davdenko"
 __license__ = "BSD-3-Clause"
-__version__ = "1.0.0a1"
+__version__ = "1.0.0a3"
 
 
 class HookContext(NamedTuple):
@@ -95,7 +95,7 @@ def get_pre_commit_args(
     hook: str, *, config: Path = None
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    _add_color_option(parser)
+    add_color_option(parser)
     _add_config_option(parser)
     _add_run_options(parser)
 

@@ -49,7 +49,7 @@ Requirements
 ============
 
 - `Python <https://www.python.org/>`_ 3.7 or later
-- `pre-commit`_ 2.4.0 or later
+- `pre-commit`_ 2.7.1 or later
 
 License
 =======
