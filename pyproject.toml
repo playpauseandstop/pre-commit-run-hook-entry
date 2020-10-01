@@ -39,7 +39,7 @@ python = "^3.7"
 pre-commit = "^2.7.1"
 
 [tool.poetry.dev-dependencies]
-coverage = {extras = ["toml"], version = "^5.1"}
+coverage = {extras = ["toml"], version = "^5.3"}
 pytest = "^6.1.0"
 pytest-cov = "^2.9.0"
 
