@@ -40,7 +40,7 @@ pre-commit = "^2.7.1"
 
 [tool.poetry.dev-dependencies]
 coverage = {extras = ["toml"], version = "^5.1"}
-pytest = "^6.0.1"
+pytest = "^6.1.0"
 pytest-cov = "^2.9.0"
 
 [tool.poetry.scripts]
