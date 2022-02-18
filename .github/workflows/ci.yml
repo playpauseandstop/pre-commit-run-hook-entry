@@ -50,7 +50,11 @@ jobs:
         run: "poetry install --no-dev"
 
       - name: "Import package"
-        run: ".venv/bin/python3 -c 'from pre_commit_run_hook_entry.cli import main'"
+        run: |
+          set -euo pipefail
+
+          source ${VENV}
+          python3 -c 'from pre_commit_which_hook_entry.cli import main'
 
   test:
     name: "Python ${{ matrix.python-version }}"
