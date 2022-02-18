@@ -54,7 +54,7 @@ jobs:
           set -euo pipefail
 
           source ${VENV}
-          python3 -c 'from pre_commit_which_hook_entry.cli import main'
+          python3 -c 'from pre_commit_run_hook_entry.cli import main, main_black, main_which'
 
   test:
     name: "Python ${{ matrix.python-version }}"
