@@ -50,7 +50,7 @@ jobs:
         run: "poetry install --no-dev"
 
       - name: "Import package"
-        run: "poetry run python3 -c 'from pre_commit_run_hook_entry.cli import main'"
+        run: ".venv/bin/python3 -c 'from pre_commit_run_hook_entry.cli import main'"
 
   test:
     name: "Python ${{ matrix.python-version }}"
@@ -95,7 +95,7 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: "Run tests"
-        run: "poetry run python3 -m pytest"
+        run: ".venv/bin/python3 -m pytest"
         env:
           STAGE: "test"
 
@@ -104,7 +104,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          python3 -m pip install coveralls==${{ env.COVERALLS_VERSION }}
+          python3 -m pip install --no-cache-dir coveralls==${{ env.COVERALLS_VERSION }}
           python3 -m coveralls --source=github
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -135,7 +135,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          python -m pip install twine==${{ env.TWINE_VERSION }}
+          python -m pip install --no-cache-dir twine==${{ env.TWINE_VERSION }}
           python -m twine check dist/*
 
       - name: "Publish package"
