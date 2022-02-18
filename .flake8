@@ -1,5 +1,6 @@
 [flake8]
-application-import-names = pre_commit_run_hook_entry
-import-order-style = smarkets
+ban-relative-imports = True
+extend-ignore = E501
 inline-quotes = double
 max-complexity = 15
+multiline-quotes = double

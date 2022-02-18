@@ -1,53 +1,32 @@
 import argparse
 import sys
-import tempfile
-from contextlib import contextmanager
 from pathlib import Path
-from typing import (
-    Callable,
-    cast,
-    Iterator,
-    NamedTuple,
-    Optional,
-    Sequence,
-    Tuple,
-)
+from typing import Callable, Optional
 
 from pre_commit import git
-from pre_commit.clientlib import load_config
 from pre_commit.color import add_color_option
 from pre_commit.error_handler import error_handler
 from pre_commit.hook import Hook
-from pre_commit.languages.all import languages
 from pre_commit.logging_handler import logging_handler
-from pre_commit.main import (
-    _add_config_option,
-    _add_run_options,
-)
-from pre_commit.repository import all_hooks, install_hook_envs
+from pre_commit.main import _add_config_option, _add_run_options
 from pre_commit.store import Store
+
+from pre_commit_run_hook_entry import __prog__
+from pre_commit_run_hook_entry.annotations import Argv
+from pre_commit_run_hook_entry.hooks import (
+    ARG_BREAK,
+    find_hook,
+    hook_context,
+    patch_hook,
+    run_hook,
+)
 
 
 ARG_CONFIG = "--config"
 ARG_DIFF = "--diff"
 ARG_QUIET = "--quiet"
-ARG_STDIN = "-"
-ARG_BREAK = "--"
 CHUNK_SIZE = 4096
 HOOK_BLACK = "black"
-
-Argv = Sequence[str]
-
-__prog__ = "pre-commit-run-hook-entry"
-__author__ = "Igor Davdenko"
-__license__ = "BSD-3-Clause"
-__version__ = "1.0.0a3"
-
-
-class HookContext(NamedTuple):
-    hook: str
-    extra_args: Argv
-    tmp_path: Optional[Path] = None
 
 
 def find_file(file_name: str, *, path: Path = None) -> Optional[Path]:
@@ -59,36 +38,6 @@ def find_file(file_name: str, *, path: Path = None) -> Optional[Path]:
     if path.parent != path:
         return find_file(file_name, path=path.parent)
     return None
-
-
-def find_hook(args: argparse.Namespace, store: Store) -> Hook:
-    config = load_config(args.config)
-    hooks = [
-        hook
-        for hook in all_hooks(config, store)
-        if not args.hook or hook.id == args.hook or hook.alias == args.hook
-        if args.hook_stage in hook.stages
-    ]
-
-    if not hooks:
-        raise ValueError(
-            f"No hook with id `{args.hook}` in stage `{args.hook_stage}`"
-        )
-
-    install_hook_envs(hooks, store)
-    return hooks[0]
-
-
-def get_args(argv: Argv) -> Tuple[str, Argv]:
-    if ARG_BREAK not in argv:
-        return (argv[0], argv[1:])
-
-    idx = argv.index(ARG_BREAK)
-    if idx == 1:
-        return (argv[0], argv[2:])
-
-    next_idx = idx + 2
-    return (argv[idx + 1], [*argv[:idx], *argv[next_idx:]])
 
 
 def get_pre_commit_args(
@@ -104,23 +53,6 @@ def get_pre_commit_args(
         args += ["--config", str(config)]
 
     return parser.parse_args(args)
-
-
-@contextmanager
-def hook_context(argv: Argv) -> Iterator[HookContext]:
-    hook, extra_args = get_args(argv)
-
-    tmp_path: Optional[Path] = None
-    if ARG_STDIN in extra_args:
-        tmp_path = redirect_stdin_to_temp_file()
-        extra_args = list(extra_args)
-        extra_args[extra_args.index(ARG_STDIN)] = str(tmp_path)
-
-    try:
-        yield HookContext(hook, extra_args, tmp_path)
-    finally:
-        if tmp_path:
-            tmp_path.unlink()
 
 
 def main(
@@ -233,36 +165,6 @@ def main_which(argv: Argv = None) -> int:
     return main(argv, hook_entry_func=which_entry)
 
 
-def patch_hook(
-    hook: Hook, *, extra_args: Argv = None, entry: str = None
-) -> Hook:
-    patched = hook._asdict()
-
-    if extra_args:
-        patched["args"].extend(extra_args)
-    if entry:
-        patched["entry"] = entry
-
-    return Hook(**patched)
-
-
-def redirect_stdin_to_temp_file() -> Path:
-    tmp_file = tempfile.NamedTemporaryFile(
-        prefix="pcrhe", mode="w+", delete=False
-    )
-    tmp_file.write(sys.stdin.read())
-    return Path(tmp_file.name)
-
-
-def run_hook(hook: Hook, use_color: bool) -> Tuple[int, bytes]:
-    language = languages[hook.language]
-    return cast(Tuple[int, bytes], language.run_hook(hook, [], use_color))
-
-
 def usage() -> int:
     print(f"Usage: {__prog__} HOOK ...", file=sys.stderr)
     return 1
-
-
-if __name__ == "__main__":  # pragma: no cover
-    sys.exit(main())

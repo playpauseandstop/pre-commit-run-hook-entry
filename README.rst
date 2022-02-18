@@ -49,7 +49,7 @@ Requirements
 ============
 
 - `Python <https://www.python.org/>`_ 3.7 or later
-- `pre-commit`_ 2.7.1 or later
+- `pre-commit`_ 2.17.0 or later
 
 License
 =======
@@ -99,8 +99,8 @@ mypy pre-commit hooks for formatting & linting,
         "python.linting.mypyArgs": ["mypy"]
     }
 
-Sublime Text 3 Integration
---------------------------
+Sublime Text Integration
+------------------------
 
 sublack
 ~~~~~~~
