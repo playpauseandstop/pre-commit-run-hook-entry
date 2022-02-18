@@ -84,14 +84,12 @@ jobs:
         run: "poetry install"
 
       - name: "Cache mypy"
-        if: "${{ startsWith(env.DEV_PYTHON_VERSION, matrix.python-version) }}"
         uses: "actions/cache@v2.1.7"
         with:
           path: ".mypy_cache"
           key: "mypy-${{ matrix.python-version }}"
 
       - name: "Run pre-commit"
-        if: "${{ startsWith(env.DEV_PYTHON_VERSION, matrix.python-version) }}"
         uses: "pre-commit/action@v2.0.3"
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
