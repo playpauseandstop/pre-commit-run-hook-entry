@@ -6,9 +6,11 @@ branch = true
 source = ["pre_commit_run_hook_entry"]
 
 [tool.coverage.paths]
-source = ["pre_commit_run_hook_entry.py"]
+source = ["./src/"]
 
 [tool.coverage.report]
+fail_under = 95
+omit = ["./src/pre_commit_run_hook_entry/__main__.py"]
 skip_covered = true
 show_missing = true
 
@@ -80,17 +82,17 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
-pre-commit-run-black-entry = "pre_commit_run_hook_entry:main_black"
-pre-commit-run-hook-entry = "pre_commit_run_hook_entry:main"
-pre-commit-which-hook-entry = "pre_commit_run_hook_entry:main_which"
+pre-commit-run-black-entry = "pre_commit_run_hook_entry.cli:main_black"
+pre-commit-run-hook-entry = "pre_commit_run_hook_entry.cli:main"
+pre-commit-which-hook-entry = "pre_commit_run_hook_entry.cli:main_which"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues"
 
 [tool.pytest.ini_options]
 minversion = "7.1.2"
+testpaths = ["tests/"]
 addopts = "--cov --no-cov-on-fail"
-python_files = "tests.py"
 log_level = "info"
 
 [build-system]

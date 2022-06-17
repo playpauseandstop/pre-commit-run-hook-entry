@@ -258,8 +258,4 @@ def run_hook(hook: Hook, use_color: bool) -> Tuple[int, bytes]:
 
 def usage() -> int:
     print(f"Usage: {__prog__} HOOK ...", file=sys.stderr)
-    return 1
-
-
-if __name__ == "__main__":  # pragma: no cover
-    sys.exit(main())
+    raise SystemExit(1)
