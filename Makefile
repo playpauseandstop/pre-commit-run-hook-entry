@@ -1,22 +1,18 @@
-.PHONY: install lint lint-only test test-only
+.PHONY: \
+	install \
+	lint \
+	lint-and-test \
+	list-outdated \
+	test
 
-POETRY ?= poetry
-PRE_COMMIT ?= pre-commit
-PYTHON ?= $(POETRY) run python
+include python.mk
 
-install: .install
-.install: pyproject.toml poetry.toml poetry.lock
-	$(POETRY) install
-	touch $@
+install: install-python
 
-lint: install lint-only
-lint-only:
-	SKIP=$(SKIP) $(PRE_COMMIT) run --all $(HOOK)
+lint: lint-python
 
-poetry.toml:
-	$(POETRY) config --local virtualenvs.create true
-	$(POETRY) config --local virtualenvs.in-project true
+lint-and-test: lint test
 
-test: lint test-only
-test-only:
-	$(PYTHON) -m pytest
+list-outdated: list-outdated-python
+
+test: test-python

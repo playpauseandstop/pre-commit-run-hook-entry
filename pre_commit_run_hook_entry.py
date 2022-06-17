@@ -20,10 +20,7 @@ from pre_commit.error_handler import error_handler
 from pre_commit.hook import Hook
 from pre_commit.languages.all import languages
 from pre_commit.logging_handler import logging_handler
-from pre_commit.main import (
-    _add_config_option,
-    _add_run_options,
-)
+from pre_commit.main import _add_config_option, _add_run_options
 from pre_commit.repository import all_hooks, install_hook_envs
 from pre_commit.store import Store
 
