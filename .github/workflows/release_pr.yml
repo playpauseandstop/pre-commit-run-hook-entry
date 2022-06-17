@@ -13,8 +13,8 @@ on:
         default: ""
 
 env:
-  BADABUMP_VERSION: "21.3.3"
   PYTHONUNBUFFERED: "1"
+  BADABUMP_VERSION: "21.3.3"
 
 jobs:
   create_release_pr:
