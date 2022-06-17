@@ -24,6 +24,8 @@ from pre_commit.main import _add_config_option, _add_run_options
 from pre_commit.repository import all_hooks, install_hook_envs
 from pre_commit.store import Store
 
+from pre_commit_run_hook_entry import __prog__
+
 
 ARG_CONFIG = "--config"
 ARG_DIFF = "--diff"
@@ -34,11 +36,6 @@ CHUNK_SIZE = 4096
 HOOK_BLACK = "black"
 
 Argv = Sequence[str]
-
-__prog__ = "pre-commit-run-hook-entry"
-__author__ = "Igor Davdenko"
-__license__ = "BSD-3-Clause"
-__version__ = "1.0.0a3"
 
 
 class HookContext(NamedTuple):
