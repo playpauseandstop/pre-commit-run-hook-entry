@@ -88,7 +88,7 @@ jobs:
       - name: "Send report to coveralls"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: "poetry run coveralls --service=github"
+        run: "poetry run python3 -m coveralls --service=github"
 
   package:
     needs: ["test"]
