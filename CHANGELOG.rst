@@ -1,6 +1,18 @@
 1.0.0 (In Development)
 ======================
 
+1.0.0b0 (2022-06-17)
+--------------------
+
+**Other:**
+
+- [#27] **BREAKING CHANGE:** Update dev Python version to 3.10.5 (#63)
+- Use latest pytest
+- (**deps-dev**) bump pytest from 6.0.1 to 6.1.0 (#23)
+- (**deps-dev**) bump coverage from 5.2.1 to 5.3 (#24)
+- (**deps-dev**) bump pytest from 6.1.0 to 6.1.2 (#25)
+- Update default branch name (#64)
+
 1.0.0a3 (2020-08-27)
 --------------------
 
