@@ -80,6 +80,7 @@ coverage = "^6.4.1"
 mypy = "^0.961"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
+coveralls = "^3.3.1"
 
 [tool.poetry.scripts]
 pre-commit-run-black-entry = "pre_commit_run_hook_entry.cli:main_black"
@@ -91,7 +92,7 @@ pre-commit-which-hook-entry = "pre_commit_run_hook_entry.cli:main_which"
 
 [tool.pytest.ini_options]
 minversion = "7.1.2"
-testpaths = ["tests/"]
+testpaths = ["./tests/"]
 addopts = "--cov --no-cov-on-fail"
 log_level = "info"
 

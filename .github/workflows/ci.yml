@@ -10,12 +10,10 @@ on:
 env:
   # Get latest versions by running,
   #
-  # ```bash
-  # pip-latest-release badabump coverage coveralls poetry twine
+  # ```shell
+  # pip-latest-release badabump poetry twine
   # ```
   BADABUMP_VERSION: "21.3.3"
-  COVERAGE_VERSION: "3.4.1"
-  COVERALLS_VERSION: "3.3.1"
   POETRY_VERSION: "1.1.3"
   TWINE_VERSION: "4.0.1"
 
@@ -45,14 +43,14 @@ jobs:
       - name: "Cache venv"
         uses: "actions/cache@v3.0.4"
         with:
-          path: ".venv/"
+          path: "./.venv/"
           key: "venv-dev-${{ hashFiles('poetry.lock') }}"
 
       - name: "Install package"
         run: "poetry install"
 
       - name: "Import package"
-        run: "poetry run python3 -c 'import pre_commit_run_hook_entry'"
+        run: "poetry run python3 -c 'from pre_commit_run_hook_entry.cli import main'"
 
   test:
     name: "Test package"
@@ -75,7 +73,7 @@ jobs:
       - name: "Cache venv"
         uses: "actions/cache@v3.0.4"
         with:
-          path: ".venv/"
+          path: "./.venv/"
           key: "venv-dev-${{ hashFiles('poetry.lock') }}"
 
       - name: "Install package"
@@ -90,11 +88,7 @@ jobs:
       - name: "Send report to coveralls"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: |
-          set -euo pipefail
-
-          python3 -m pip install coverage[toml]==${{ env.COVERAGE_VERSION }} coveralls==${{ env.COVERALLS_VERSION }}
-          python3 -m coveralls --service=github
+        run: "poetry run coveralls --service=github"
 
   package:
     needs: ["test"]
@@ -154,23 +148,12 @@ jobs:
         with:
           python-version-file: ".python-version"
 
-      - name: "Install poetry"
-        uses: "snok/install-poetry@v1.3.1"
-        with:
-          version: "${{ env.POETRY_VERSION }}"
-
-      - name: "Cache venv"
-        uses: "actions/cache@v3.0.4"
-        with:
-          path: ".venv"
-          key: "venv-dev-${{ hashFiles('poetry.lock') }}"
-
-      - name: "Install package without dev dependencies"
-        run: "poetry install --no-dev"
+      - name: "Install badabump"
+        run: "python3 -m pip install badabump==${{ env.BADABUMP_VERSION }}"
 
       - id: "badabump"
         name: "Prepare release info"
-        run: 'poetry run python3 -m badabump.ci prepare_release "${{ github.ref }}"'
+        run: 'python3 -m badabump.ci prepare_release "${{ github.ref }}"'
 
       - name: "Create new release"
         uses: "actions/create-release@v1.1.4"
