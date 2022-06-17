@@ -20,12 +20,11 @@ from pre_commit.error_handler import error_handler
 from pre_commit.hook import Hook
 from pre_commit.languages.all import languages
 from pre_commit.logging_handler import logging_handler
-from pre_commit.main import (
-    _add_config_option,
-    _add_run_options,
-)
+from pre_commit.main import _add_config_option, _add_run_options
 from pre_commit.repository import all_hooks, install_hook_envs
 from pre_commit.store import Store
+
+from pre_commit_run_hook_entry import __prog__
 
 
 ARG_CONFIG = "--config"
@@ -37,11 +36,6 @@ CHUNK_SIZE = 4096
 HOOK_BLACK = "black"
 
 Argv = Sequence[str]
-
-__prog__ = "pre-commit-run-hook-entry"
-__author__ = "Igor Davdenko"
-__license__ = "BSD-3-Clause"
-__version__ = "1.0.0a3"
 
 
 class HookContext(NamedTuple):
@@ -261,8 +255,4 @@ def run_hook(hook: Hook, use_color: bool) -> Tuple[int, bytes]:
 
 def usage() -> int:
     print(f"Usage: {__prog__} HOOK ...", file=sys.stderr)
-    return 1
-
-
-if __name__ == "__main__":  # pragma: no cover
-    sys.exit(main())
+    raise SystemExit(1)

@@ -1,17 +1,33 @@
 import os
 import subprocess
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 from random import choice
 from string import ascii_letters, digits
-from typing import Iterator
+from typing import Iterator, List
 
 import pytest
 
-from pre_commit_run_hook_entry import find_file, get_args, get_pre_commit_args
+from pre_commit_run_hook_entry.cli import (
+    find_file,
+    get_args,
+    get_pre_commit_args,
+)
 
 
-ROOT_PATH = (Path(__file__).parent).absolute()
+UNIT_PATH = Path(__file__).resolve().absolute().parent
+TESTS_PATH = UNIT_PATH.parent
+ROOT_PATH = TESTS_PATH.parent
+
+
+@pytest.fixture(scope="function")
+def cmd():
+    def ensure_bin(bin_name: str, *args: str) -> List[str]:
+        bin_path = Path(sys.executable).parent
+        return [bin_path / bin_name, *args]
+
+    return ensure_bin
 
 
 @contextmanager
@@ -69,13 +85,13 @@ def test_get_pre_commmit_args_with_config():
     assert args.config == str(config_yaml)
 
 
-def test_pre_commit_run_black_entry():
+def test_pre_commit_run_black_entry(cmd):
     result = subprocess.run(
-        [
+        cmd(
             "pre-commit-run-black-entry",
             "--check",
-            "pre_commit_run_hook_entry.py",
-        ],
+            ROOT_PATH / "src" / "pre_commit_run_hook_entry" / "cli.py",
+        ),
         capture_output=True,
     )
     assert result.returncode == 0
@@ -83,13 +99,13 @@ def test_pre_commit_run_black_entry():
     assert result.stderr == b""
 
 
-def test_pre_commit_run_black_entry_stdin(tmp_path):
+def test_pre_commit_run_black_entry_stdin(tmp_path, cmd):
     sample = tmp_path / "file.py"
     sample.write_text('print("Hello, world")\n')
 
     with open(sample, "rb") as handler:
         result = subprocess.run(
-            ["pre-commit-run-black-entry", "-"],
+            cmd("pre-commit-run-black-entry", "-"),
             stdin=handler,
             capture_output=True,
         )
@@ -108,32 +124,37 @@ def test_pre_commit_run_black_entry_stdin(tmp_path):
         ["check-yaml", "--", ".pre-commit-config.yaml"],
     ),
 )
-def test_pre_commit_run_hook_entry(args):
-    assert subprocess.check_call(["pre-commit-run-hook-entry", *args]) == 0
+def test_pre_commit_run_hook_entry(cmd, args):
+    assert subprocess.check_call(cmd("pre-commit-run-hook-entry", *args)) == 0
 
 
-def test_pre_commit_run_hook_entry_error():
+def test_pre_commit_run_hook_entry_error(cmd):
     with pytest.raises(subprocess.CalledProcessError):
         subprocess.check_call(
-            ["pre-commit-run-hook-entry", "does-not-exist", "--", "README.rst"]
+            cmd(
+                "pre-commit-run-hook-entry",
+                "does-not-exist",
+                "--",
+                "README.rst",
+            )
         )
 
 
-def test_pre_commit_run_hook_entry_stdin(tmp_path):
+def test_pre_commit_run_hook_entry_stdin(tmp_path, cmd):
     sample = tmp_path / "file.py"
     sample.write_text('print("Hello, world!")\n')
 
     with open(sample, "rb") as handler:
         assert (
             subprocess.check_call(
-                [
+                cmd(
                     "pre-commit-run-hook-entry",
                     "black",
                     "--",
                     "--check",
                     "--diff",
                     "-",
-                ],
+                ),
                 stdin=handler,
             )
             == 0
@@ -141,28 +162,30 @@ def test_pre_commit_run_hook_entry_stdin(tmp_path):
 
 
 @pytest.mark.parametrize("args", ([], ["--help"]))
-def test_pre_commit_run_hook_entry_usage(args):
+def test_pre_commit_run_hook_entry_usage(cmd, args):
     result = subprocess.run(
-        ["pre-commit-run-hook-entry", *args], capture_output=True
+        cmd("pre-commit-run-hook-entry", *args), capture_output=True
     )
     assert result.returncode == 1
     assert result.stdout == b""
     assert result.stderr == b"Usage: pre-commit-run-hook-entry HOOK ...\n"
 
 
-def test_pre_commit_which_hook_entry():
+def test_pre_commit_which_hook_entry(cmd):
     result = subprocess.run(
-        ["pre-commit-which-hook-entry", "black"], capture_output=True
+        cmd("pre-commit-which-hook-entry", "black"),
+        capture_output=True,
     )
     assert result.returncode == 0
     assert result.stdout.endswith(b"/black\n")
     assert result.stderr == b""
 
 
-def test_pre_commit_which_hook_entry_does_not_exist():
+def test_pre_commit_which_hook_entry_does_not_exist(cmd):
     result = subprocess.run(
-        ["pre-commit-which-hook-entry", "eslint"], capture_output=True
+        cmd("pre-commit-which-hook-entry", "eslint"),
+        capture_output=True,
     )
-    assert result.returncode == 1
+    assert result.returncode == 3
     assert result.stdout.startswith(b"An unexpected error has occurred: ")
     assert result.stderr == b""

@@ -1,17 +1,71 @@
+[tool.badabump]
+version_type = "semver"
+version_files = [
+  "./pyproject.toml",
+  "./src/pre_commit_run_hook_entry/__init__.py",
+]
+
 [tool.black]
 line_length = 79
+target_version = ["py37"]
 
 [tool.coverage.run]
 branch = true
 source = ["pre_commit_run_hook_entry"]
 
 [tool.coverage.paths]
-source = ["pre_commit_run_hook_entry.py"]
+source = ["./src/"]
 
 [tool.coverage.report]
-fail_under = 85
+fail_under = 95
+omit = ["./src/pre_commit_run_hook_entry/__main__.py"]
 skip_covered = true
 show_missing = true
+
+[tool.isort]
+profile = "attrs"
+combine_as_imports = true
+force_alphabetical_sort_within_sections = true
+lines_between_types = 0
+src_paths = ["./", "./src/"]
+virtual_env = "./.venv/"
+
+[tool.mypy]
+allow_untyped_globals = true
+check_untyped_defs = true
+disallow_any_decorated = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+follow_imports = "normal"
+follow_imports_for_stubs = true
+ignore_missing_imports = false
+mypy_path = "./src/"
+namespace_packages = true
+python_executable = "./.venv/bin/python3"
+show_column_numbers = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+  "conftest",
+  "migrations.*",
+  "tests.*",
+  "*.tests"
+]
+ignore_errors = true
+
+# Local mypy config
+[[tool.mypy.overrides]]
+module = [
+  "pre_commit.*"
+]
+ignore_missing_imports = true
 
 [tool.poetry]
 name = "pre-commit-run-hook-entry"
@@ -36,25 +90,29 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pre-commit = "^2.7.1"
+pre-commit = "^2.19.0"
 
 [tool.poetry.dev-dependencies]
-coverage = {extras = ["toml"], version = "^5.3"}
-pytest = "^6.1.2"
-pytest-cov = "^2.9.0"
+coverage = {extras = ["toml"], version = "^6.4.1"}
+coveralls = "^3.3.1"
+mypy = "^0.961"
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
-pre-commit-run-black-entry = "pre_commit_run_hook_entry:main_black"
-pre-commit-run-hook-entry = "pre_commit_run_hook_entry:main"
-pre-commit-which-hook-entry = "pre_commit_run_hook_entry:main_which"
+pre-commit-run-black-entry = "pre_commit_run_hook_entry.cli:main_black"
+pre-commit-run-hook-entry = "pre_commit_run_hook_entry.cli:main"
+pre-commit-which-hook-entry = "pre_commit_run_hook_entry.cli:main_which"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues"
 
 [tool.pytest.ini_options]
+minversion = "7.1.2"
+testpaths = ["./tests/"]
 addopts = "--cov --no-cov-on-fail"
-python_files = "tests.py"
+log_level = "info"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
