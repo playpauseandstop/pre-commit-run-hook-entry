@@ -23,10 +23,10 @@ pre-commit-run-hook-entry
     :alt: Python versions
 
 .. image:: https://img.shields.io/pypi/l/pre-commit-run-hook-entry.svg
-    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/blob/master/LICENSE
+    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/blob/main/LICENSE
     :alt: BSD License
 
-.. image:: https://coveralls.io/repos/playpauseandstop/pre-commit-run-hook-entry/badge.svg?branch=master&service=github
+.. image:: https://coveralls.io/repos/playpauseandstop/pre-commit-run-hook-entry/badge.svg?branch=main&service=github
     :target: https://coveralls.io/github/playpauseandstop/pre-commit-run-hook-entry
     :alt: Coverage
 
