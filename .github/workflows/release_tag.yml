@@ -32,7 +32,7 @@ jobs:
           token: "${{ steps.token.outputs.token }}"
 
       - name: "Install Python"
-        uses: "actions/setup-python@v4.0.0"
+        uses: "actions/setup-python@v4.1.0"
         with:
           python-version-file: ".python-version"
 
