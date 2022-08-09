@@ -78,7 +78,7 @@ homepage = "https://igordavydenko.com/projects/#pre-commit-run-hook-entry"
 repository = "https://github.com/playpauseandstop/pre-commit-run-hook-entry"
 keywords = ["pre-commit", "pre-commit hook", "vscode", "sublime-text3"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 4 - Beta",
   "Environment :: Plugins",
   "Intended Audience :: Developers",
   "License :: OSI Approved :: BSD License",
@@ -93,9 +93,9 @@ python = "^3.7"
 pre-commit = "^2.19.0"
 
 [tool.poetry.dev-dependencies]
-coverage = {extras = ["toml"], version = "^6.4.1"}
+coverage = {extras = ["toml"], version = "^6.4.3"}
 coveralls = "^3.3.1"
-mypy = "^0.961"
+mypy = "^0.971"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 
@@ -112,6 +112,35 @@ minversion = "7.1.2"
 testpaths = ["./tests/"]
 addopts = "--cov --no-cov-on-fail"
 log_level = "info"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py310,py310-minimum-requirements
+skipsdist = True
+
+[gh-actions]
+python =
+  3.10: py310
+
+[testenv]
+passenv =
+  PYTHONPATH
+  PYTEST_ADDOPTS
+setenv =
+  PYTHONPATH=.
+skip_install = True
+whitelist_externals = poetry
+commands_pre =
+  poetry install
+commands =
+  poetry run python3 -m pytest
+
+[testenv:py310-minimum-requirements]
+commands_pre =
+  poetry install
+  poetry run python3 -m pip install pre-commit==2.19.0
+"""
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
