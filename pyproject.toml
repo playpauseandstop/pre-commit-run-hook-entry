@@ -113,6 +113,35 @@ testpaths = ["./tests/"]
 addopts = "--cov --no-cov-on-fail"
 log_level = "info"
 
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py310,py310-minimum-requirements
+skipsdist = True
+
+[gh-actions]
+python =
+  3.10: py310
+
+[testenv]
+passenv =
+  PYTHONPATH
+  PYTEST_ADDOPTS
+setenv =
+  PYTHONPATH=.
+skip_install = True
+whitelist_externals = poetry
+commands_pre =
+  poetry install
+commands =
+  poetry run python3 -m pytest
+
+[testenv:py310-minimum-requirements]
+commands_pre =
+  poetry install
+  poetry run python3 -m pip install pre-commit==2.19.0
+"""
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
