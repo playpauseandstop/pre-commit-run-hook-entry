@@ -54,7 +54,7 @@ jobs:
         with:
           python-path: "${{ steps.python_and_poetry.outputs.python-path }}"
           python-version: "${{ steps.python_and_poetry.outputs.python-version }}"
-          use-coveralls: "${{ matrix.dev }}"
+          use-coveralls: "true"
           coveralls-token: "${{ secrets.GITHUB_TOKEN }}"
 
   package:
