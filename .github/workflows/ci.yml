@@ -1,4 +1,8 @@
-name: "ci"
+defaults:
+  run:
+    shell: "bash"
+
+name: "CI"
 
 on:
   push:
