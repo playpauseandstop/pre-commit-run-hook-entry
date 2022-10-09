@@ -135,13 +135,13 @@ setenv =
 skip_install = True
 whitelist_externals = poetry
 commands_pre =
-  poetry install
+  poetry install --only main,test
 commands =
   poetry run python3 -m pytest
 
 [testenv:py310-minimum-requirements]
 commands_pre =
-  poetry install
+  poetry install --only main,test
   poetry run python3 -m pip install pre-commit==2.19.0
 """
 
