@@ -117,11 +117,11 @@ def test_pre_commit_run_black_entry_stdin(tmp_path, cmd):
 @pytest.mark.parametrize(
     "args",
     (
-        ["black", "--", "--check", "pre_commit_run_hook_entry.py"],
-        ["flake8", "--", "pre_commit_run_hook_entry.py"],
-        ["mypy", "--", "pre_commit_run_hook_entry.py"],
-        ["check-toml", "--", "pyproject.toml"],
-        ["check-yaml", "--", ".pre-commit-config.yaml"],
+        ["black", "--", "--check", "./src/"],
+        ["flake8", "--", "./src/"],
+        ["mypy", "--", "./src/"],
+        ["check-toml", "--", "./pyproject.toml"],
+        ["check-yaml", "--", "./.pre-commit-config.yaml"],
     ),
 )
 def test_pre_commit_run_hook_entry(cmd, args):
