@@ -3,15 +3,7 @@ import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import (
-    Callable,
-    cast,
-    Iterator,
-    NamedTuple,
-    Optional,
-    Sequence,
-    Tuple,
-)
+from typing import Callable, cast, Iterator, NamedTuple, Sequence, Tuple, Union
 
 from pre_commit import git
 from pre_commit.clientlib import load_config
@@ -41,10 +33,12 @@ Argv = Sequence[str]
 class HookContext(NamedTuple):
     hook: str
     extra_args: Argv
-    tmp_path: Optional[Path] = None
+    tmp_path: Union[Path, None] = None
 
 
-def find_file(file_name: str, *, path: Path = None) -> Optional[Path]:
+def find_file(
+    file_name: str, *, path: Union[Path, None] = None
+) -> Union[Path, None]:
     if path is None:
         path = Path.cwd()
     maybe_file = path / file_name
@@ -86,7 +80,7 @@ def get_args(argv: Argv) -> Tuple[str, Argv]:
 
 
 def get_pre_commit_args(
-    hook: str, *, config: Path = None
+    hook: str, *, config: Union[Path, None] = None
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     add_color_option(parser)
@@ -104,7 +98,7 @@ def get_pre_commit_args(
 def hook_context(argv: Argv) -> Iterator[HookContext]:
     hook, extra_args = get_args(argv)
 
-    tmp_path: Optional[Path] = None
+    tmp_path: Union[Path, None] = None
     if ARG_STDIN in extra_args:
         tmp_path = redirect_stdin_to_temp_file()
         extra_args = list(extra_args)
@@ -118,11 +112,11 @@ def hook_context(argv: Argv) -> Iterator[HookContext]:
 
 
 def main(
-    argv: Argv = None,
+    argv: Union[Argv, None] = None,
     *,
-    pre_commit_config_yaml: Path = None,
-    hook_entry_func: Callable[[Hook], str] = None,
-    tmp_path_func: Callable[[Path], None] = None,
+    pre_commit_config_yaml: Union[Path, None] = None,
+    hook_entry_func: Union[Callable[[Hook], str], None] = None,
+    tmp_path_func: Union[Callable[[Path], None], None] = None,
 ) -> int:
     if argv is None:
         argv = sys.argv[1:]
@@ -165,7 +159,7 @@ def main(
             return retcode
 
 
-def main_black(argv: Argv = None) -> int:
+def main_black(argv: Union[Argv, None] = None) -> int:
     """Special case for run black pre-commit hook for `sublack`_ needs.
 
     Unlike other Sublime Text 3 plugins, sublack calls ``black_command`` from
@@ -204,7 +198,7 @@ def main_black(argv: Argv = None) -> int:
     )
 
 
-def main_which(argv: Argv = None) -> int:
+def main_which(argv: Union[Argv, None] = None) -> int:
     """Find out hook entry full path.
 
     This is useful for cases, when ``pre-commit-run-hook-entry`` cannot be used
@@ -228,7 +222,10 @@ def main_which(argv: Argv = None) -> int:
 
 
 def patch_hook(
-    hook: Hook, *, extra_args: Argv = None, entry: str = None
+    hook: Hook,
+    *,
+    extra_args: Union[Argv, None] = None,
+    entry: Union[str, None] = None,
 ) -> Hook:
     patched = hook._asdict()
 
