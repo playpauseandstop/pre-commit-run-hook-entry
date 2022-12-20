@@ -5,7 +5,7 @@ inputs:
   badabump-version:
     description: "Badabump version to use"
     required: false
-    default: "21.3.3"
+    default: "22.1.0"
 
 runs:
   using: "composite"
