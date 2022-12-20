@@ -3,15 +3,7 @@ import sys
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
-from typing import (
-    Callable,
-    cast,
-    Iterator,
-    NamedTuple,
-    Optional,
-    Sequence,
-    Tuple,
-)
+from typing import Callable, cast, Iterator, NamedTuple, Sequence, Tuple, Union
 
 from pre_commit import git
 from pre_commit.clientlib import load_config
@@ -41,10 +33,10 @@ Argv = Sequence[str]
 class HookContext(NamedTuple):
     hook: str
     extra_args: Argv
-    tmp_path: Optional[Path] = None
+    tmp_path: Union[Path, None] = None
 
 
-def find_file(file_name: str, *, path: Path = None) -> Optional[Path]:
+def find_file(file_name: str, *, path: Path = None) -> Union[Path, None]:
     if path is None:
         path = Path.cwd()
     maybe_file = path / file_name
@@ -104,7 +96,7 @@ def get_pre_commit_args(
 def hook_context(argv: Argv) -> Iterator[HookContext]:
     hook, extra_args = get_args(argv)
 
-    tmp_path: Optional[Path] = None
+    tmp_path: Union[Path, None] = None
     if ARG_STDIN in extra_args:
         tmp_path = redirect_stdin_to_temp_file()
         extra_args = list(extra_args)
