@@ -85,7 +85,7 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
   "Topic :: Utilities",
-  "Typing :: Typed"
+  "Typing :: Typed",
 ]
 
 [tool.poetry.dependencies]
@@ -126,16 +126,15 @@ python =
   3.11: py311
 
 [testenv]
-passenv =
-  PYTHONPATH
-  PYTEST_ADDOPTS
-skip_install = True
 allowlist_externals =
   poetry
+passenv =
+  PYTEST_ADDOPTS
+skip_install = True
 commands_pre =
   poetry install --only main,test
 commands =
-  python3 -m pytest {tty:--color=yes}
+  python3 -m pytest
 
 [testenv:py311-minimum-requirements]
 commands_pre =
