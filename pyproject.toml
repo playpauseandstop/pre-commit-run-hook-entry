@@ -90,15 +90,15 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.7"
-pre-commit = "^2.19.0"
+pre-commit = ">=2.19.0,<4.0"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^0.991"
+mypy = "^1.0.1"
 
 [tool.poetry.group.test.dependencies]
 coverage = {extras = ["toml"], version = "^6.5.0"}
 coveralls = "^3.3.1"
-pytest = "^7.2.0"
+pytest = "^7.2.1"
 pytest-cov = "^4.0.0"
 
 [tool.poetry.scripts]
@@ -110,7 +110,7 @@ pre-commit-which-hook-entry = "pre_commit_run_hook_entry.cli:main_which"
 "Bug Tracker" = "https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues"
 
 [tool.pytest.ini_options]
-minversion = "7.2.0"
+minversion = "7.2.1"
 testpaths = ["tests/"]
 addopts = "--cov --no-cov-on-fail"
 log_level = "info"
