@@ -48,8 +48,8 @@ It might be broken after new pre-commit release.
 Requirements
 ============
 
-- `Python <https://www.python.org/>`_ 3.7 or later
-- `pre-commit`_ 2.19.0 or later
+- `Python <https://www.python.org/>`_ 3.9 or later
+- `pre-commit`_ 3.0 or later
 
 License
 =======

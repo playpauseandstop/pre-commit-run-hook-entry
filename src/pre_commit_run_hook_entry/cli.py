@@ -1,16 +1,18 @@
 import argparse
+import dataclasses
 import sys
 import tempfile
+from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Callable, cast, Iterator, NamedTuple, Sequence, Tuple, Union
+from typing import cast, TypeAlias
 
 from pre_commit import git
+from pre_commit.all_languages import languages
 from pre_commit.clientlib import load_config
 from pre_commit.color import add_color_option
 from pre_commit.error_handler import error_handler
 from pre_commit.hook import Hook
-from pre_commit.languages.all import languages
 from pre_commit.logging_handler import logging_handler
 from pre_commit.main import _add_config_option, _add_run_options
 from pre_commit.repository import all_hooks, install_hook_envs
@@ -27,18 +29,17 @@ ARG_BREAK = "--"
 CHUNK_SIZE = 4096
 HOOK_BLACK = "black"
 
-Argv = Sequence[str]
+Argv: TypeAlias = Sequence[str]
 
 
-class HookContext(NamedTuple):
+@dataclasses.dataclass(frozen=True, kw_only=True)
+class HookContext:
     hook: str
     extra_args: Argv
-    tmp_path: Union[Path, None] = None
+    tmp_path: Path | None = None
 
 
-def find_file(
-    file_name: str, *, path: Union[Path, None] = None
-) -> Union[Path, None]:
+def find_file(file_name: str, *, path: Path | None = None) -> Path | None:
     if path is None:
         path = Path.cwd()
     maybe_file = path / file_name
@@ -67,7 +68,7 @@ def find_hook(args: argparse.Namespace, store: Store) -> Hook:
     return hooks[0]
 
 
-def get_args(argv: Argv) -> Tuple[str, Argv]:
+def get_args(argv: Argv) -> tuple[str, Argv]:
     if ARG_BREAK not in argv:
         return (argv[0], argv[1:])
 
@@ -80,7 +81,7 @@ def get_args(argv: Argv) -> Tuple[str, Argv]:
 
 
 def get_pre_commit_args(
-    hook: str, *, config: Union[Path, None] = None
+    hook: str, *, config: Path | None = None
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     add_color_option(parser)
@@ -98,25 +99,25 @@ def get_pre_commit_args(
 def hook_context(argv: Argv) -> Iterator[HookContext]:
     hook, extra_args = get_args(argv)
 
-    tmp_path: Union[Path, None] = None
+    tmp_path: Path | None = None
     if ARG_STDIN in extra_args:
         tmp_path = redirect_stdin_to_temp_file()
         extra_args = list(extra_args)
         extra_args[extra_args.index(ARG_STDIN)] = str(tmp_path)
 
     try:
-        yield HookContext(hook, extra_args, tmp_path)
+        yield HookContext(hook=hook, extra_args=extra_args, tmp_path=tmp_path)
     finally:
         if tmp_path:
             tmp_path.unlink()
 
 
 def main(
-    argv: Union[Argv, None] = None,
+    argv: Argv | None = None,
     *,
-    pre_commit_config_yaml: Union[Path, None] = None,
-    hook_entry_func: Union[Callable[[Hook], str], None] = None,
-    tmp_path_func: Union[Callable[[Path], None], None] = None,
+    pre_commit_config_yaml: Path | None = None,
+    hook_entry_func: Callable[[Hook], str] | None = None,
+    tmp_path_func: Callable[[Path], None] | None = None,
 ) -> int:
     if argv is None:
         argv = sys.argv[1:]
@@ -125,7 +126,7 @@ def main(
         return usage()
 
     with hook_context(argv) as ctx:
-        hook_name, extra_args, tmp_path = ctx
+        hook_name, extra_args, tmp_path = dataclasses.astuple(ctx)
         if hook_name.startswith("-"):
             return usage()
 
@@ -159,7 +160,7 @@ def main(
             return retcode
 
 
-def main_black(argv: Union[Argv, None] = None) -> int:
+def main_black(argv: Argv | None = None) -> int:
     """Special case for run black pre-commit hook for `sublack`_ needs.
 
     Unlike other Sublime Text 3 plugins, sublack calls ``black_command`` from
@@ -198,7 +199,7 @@ def main_black(argv: Union[Argv, None] = None) -> int:
     )
 
 
-def main_which(argv: Union[Argv, None] = None) -> int:
+def main_which(argv: Argv | None = None) -> int:
     """Find out hook entry full path.
 
     This is useful for cases, when ``pre-commit-run-hook-entry`` cannot be used
@@ -224,8 +225,8 @@ def main_which(argv: Union[Argv, None] = None) -> int:
 def patch_hook(
     hook: Hook,
     *,
-    extra_args: Union[Argv, None] = None,
-    entry: Union[str, None] = None,
+    extra_args: Argv | None = None,
+    entry: str | None = None,
 ) -> Hook:
     patched = hook._asdict()
 
@@ -245,9 +246,20 @@ def redirect_stdin_to_temp_file() -> Path:
     return Path(tmp_file.name)
 
 
-def run_hook(hook: Hook, use_color: bool) -> Tuple[int, bytes]:
+def run_hook(hook: Hook, use_color: bool) -> tuple[int, bytes]:
     language = languages[hook.language]
-    return cast(Tuple[int, bytes], language.run_hook(hook, [], use_color))
+    return cast(
+        "tuple[int, bytes]",
+        language.run_hook(
+            hook.prefix,
+            hook.entry,
+            hook.args,
+            [],
+            is_local=hook.src == "local",
+            require_serial=hook.require_serial,
+            color=use_color,
+        ),
+    )
 
 
 def usage() -> int:
