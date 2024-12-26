@@ -100,7 +100,7 @@ mypy = "^1.14.0"
 coverage = "^6.5.0"
 coveralls = "^3.3.1"
 pytest = "^8.3.4"
-pytest-cov = ">=4,<6"
+pytest-cov = "^5.0.0"
 
 [tool.poetry.scripts]
 pre-commit-run-black-entry = "pre_commit_run_hook_entry.cli:main_black"
