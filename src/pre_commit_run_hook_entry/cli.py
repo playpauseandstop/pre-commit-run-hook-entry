@@ -143,18 +143,19 @@ def redirect_stdin_to_temp_file() -> Path:
 
 def run_hook(hook: Hook, /, *, color: bool) -> tuple[int, bytes]:
     language = languages[hook.language]
-    return cast(
-        "tuple[int, bytes]",
-        language.run_hook(
-            hook.prefix,
-            hook.entry,
-            hook.args,
-            [],
-            is_local=hook.src == "local",
-            require_serial=hook.require_serial,
-            color=color,
-        ),
-    )
+    with language.in_env(hook.prefix, hook.language_version):
+        return cast(
+            "tuple[int, bytes]",
+            language.run_hook(
+                hook.prefix,
+                hook.entry,
+                hook.args,
+                [],
+                is_local=hook.src == "local",
+                require_serial=hook.require_serial,
+                color=color,
+            ),
+        )
 
 
 def usage() -> int:

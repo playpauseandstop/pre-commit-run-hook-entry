@@ -90,7 +90,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pre-commit = ">=3.0.0,<5.0"
+pre-commit = ">=4.0.0,<5.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.18.1"
@@ -137,8 +137,8 @@ commands_pre =
 commands =
   python3 -m pytest
 
-[testenv:py311-minimum-requirements]
+[testenv:py312-minimum-requirements]
 commands_pre =
   poetry install --only main,test
-  poetry run python3 -m pip install pre-commit==3.0.0
+  poetry run python3 -m pip install pre-commit==4.0.0
 """
