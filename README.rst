@@ -2,9 +2,9 @@
 pre-commit-run-hook-entry
 =========================
 
-.. image:: https://github.com/playpauseandstop/pre-commit-run-hook-entry/workflows/ci/badge.svg
-    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/actions?query=workflow%3A%22ci%22
-    :alt: CI Workflow
+.. image:: https://github.com/playpauseandstop/pre-commit-run-hook-entry/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/playpauseandstop/pre-commit-run-hook-entry/actions/workflows/ci.yml
+    :alt: CI
 
 .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
     :target: https://github.com/pre-commit/pre-commit
@@ -81,13 +81,12 @@ Prerequisites
 pre-commit Versions Support
 ---------------------------
 
-+===================================+=====================+
-| pre-commit-run-hook-entry version | pre-commit version  |
-+===================================+=====================+
-| ``1.0.0b0`` or lower              | ``3.8.0`` or lower  |
-+-----------------------------------+---------------------+
-| ``1.0.0`` or higher               | ``4.0.0`` or higher |
-+-----------------------------------+---------------------+
+================================= ===================
+pre-commit-run-hook-entry version pre-commit version
+================================= ===================
+``1.0.0b0`` or lower              ``3.8.0`` or lower
+``1.0.0rc0`` or higher            ``4.0.0`` or higher
+================================= ===================
 
 VS Code Integration
 -------------------
