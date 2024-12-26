@@ -21,6 +21,7 @@ from pre_commit.store import Store
 from pre_commit_run_hook_entry import __prog__
 
 
+# Constants
 ARG_CONFIG = "--config"
 ARG_DIFF = "--diff"
 ARG_QUIET = "--quiet"
@@ -29,9 +30,11 @@ ARG_BREAK = "--"
 CHUNK_SIZE = 4096
 HOOK_BLACK = "black"
 
+# Type aliases
 Argv: TypeAlias = Sequence[str]
 
 
+# Dataclasses
 @dataclasses.dataclass(frozen=True, kw_only=True)
 class HookContext:
     hook: str
@@ -39,7 +42,8 @@ class HookContext:
     tmp_path: Path | None = None
 
 
-def find_file(file_name: str, *, path: Path | None = None) -> Path | None:
+# Private functions
+def find_file(file_name: str, /, *, path: Path | None = None) -> Path | None:
     if path is None:
         path = Path.cwd()
     maybe_file = path / file_name
@@ -50,7 +54,7 @@ def find_file(file_name: str, *, path: Path | None = None) -> Path | None:
     return None
 
 
-def find_hook(args: argparse.Namespace, store: Store) -> Hook:
+def find_hook(args: argparse.Namespace, store: Store, /) -> Hook:
     config = load_config(args.config)
     hooks = [
         hook
@@ -68,7 +72,7 @@ def find_hook(args: argparse.Namespace, store: Store) -> Hook:
     return hooks[0]
 
 
-def get_args(argv: Argv) -> tuple[str, Argv]:
+def get_args(argv: Argv, /) -> tuple[str, Argv]:
     if ARG_BREAK not in argv:
         return (argv[0], argv[1:])
 
@@ -81,7 +85,7 @@ def get_args(argv: Argv) -> tuple[str, Argv]:
 
 
 def get_pre_commit_args(
-    hook: str, *, config: Path | None = None
+    hook: str, /, *, config: Path | None = None
 ) -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     add_color_option(parser)
@@ -96,7 +100,7 @@ def get_pre_commit_args(
 
 
 @contextmanager
-def hook_context(argv: Argv) -> Iterator[HookContext]:
+def hook_context(argv: Argv, /) -> Iterator[HookContext]:
     hook, extra_args = get_args(argv)
 
     tmp_path: Path | None = None
@@ -112,8 +116,56 @@ def hook_context(argv: Argv) -> Iterator[HookContext]:
             tmp_path.unlink()
 
 
+def patch_hook(
+    hook: Hook,
+    /,
+    *,
+    extra_args: Argv | None = None,
+    entry: str | None = None,
+) -> Hook:
+    patched = hook._asdict()
+
+    if extra_args:
+        patched["args"].extend(extra_args)
+    if entry:
+        patched["entry"] = entry
+
+    return Hook(**patched)
+
+
+def redirect_stdin_to_temp_file() -> Path:
+    tmp_file = tempfile.NamedTemporaryFile(
+        prefix="pcrhe", mode="w+", delete=False
+    )
+    tmp_file.write(sys.stdin.read())
+    return Path(tmp_file.name)
+
+
+def run_hook(hook: Hook, /, *, color: bool) -> tuple[int, bytes]:
+    language = languages[hook.language]
+    return cast(
+        "tuple[int, bytes]",
+        language.run_hook(
+            hook.prefix,
+            hook.entry,
+            hook.args,
+            [],
+            is_local=hook.src == "local",
+            require_serial=hook.require_serial,
+            color=color,
+        ),
+    )
+
+
+def usage() -> int:
+    print(f"Usage: {__prog__} HOOK ...", file=sys.stderr)
+    raise SystemExit(1)
+
+
+# Main entrypoints
 def main(
     argv: Argv | None = None,
+    /,
     *,
     pre_commit_config_yaml: Path | None = None,
     hook_entry_func: Callable[[Hook], str] | None = None,
@@ -148,7 +200,7 @@ def main(
                     extra_args=extra_args,
                     entry=hook_entry_func(hook) if hook_entry_func else None,
                 ),
-                pre_commit_args.color,
+                color=pre_commit_args.color,
             )
 
             if tmp_path and tmp_path_func:
@@ -160,7 +212,7 @@ def main(
             return retcode
 
 
-def main_black(argv: Argv | None = None) -> int:
+def main_black(argv: Argv | None = None, /) -> int:
     """Special case for run black pre-commit hook for `sublack`_ needs.
 
     Unlike other Sublime Text 3 plugins, sublack calls ``black_command`` from
@@ -199,7 +251,7 @@ def main_black(argv: Argv | None = None) -> int:
     )
 
 
-def main_which(argv: Argv | None = None) -> int:
+def main_which(argv: Argv | None = None, /) -> int:
     """Find out hook entry full path.
 
     This is useful for cases, when ``pre-commit-run-hook-entry`` cannot be used
@@ -220,48 +272,3 @@ def main_which(argv: Argv | None = None) -> int:
         return f"which {hook.entry}"
 
     return main(argv, hook_entry_func=which_entry)
-
-
-def patch_hook(
-    hook: Hook,
-    *,
-    extra_args: Argv | None = None,
-    entry: str | None = None,
-) -> Hook:
-    patched = hook._asdict()
-
-    if extra_args:
-        patched["args"].extend(extra_args)
-    if entry:
-        patched["entry"] = entry
-
-    return Hook(**patched)
-
-
-def redirect_stdin_to_temp_file() -> Path:
-    tmp_file = tempfile.NamedTemporaryFile(
-        prefix="pcrhe", mode="w+", delete=False
-    )
-    tmp_file.write(sys.stdin.read())
-    return Path(tmp_file.name)
-
-
-def run_hook(hook: Hook, use_color: bool) -> tuple[int, bytes]:
-    language = languages[hook.language]
-    return cast(
-        "tuple[int, bytes]",
-        language.run_hook(
-            hook.prefix,
-            hook.entry,
-            hook.args,
-            [],
-            is_local=hook.src == "local",
-            require_serial=hook.require_serial,
-            color=use_color,
-        ),
-    )
-
-
-def usage() -> int:
-    print(f"Usage: {__prog__} HOOK ...", file=sys.stderr)
-    raise SystemExit(1)
