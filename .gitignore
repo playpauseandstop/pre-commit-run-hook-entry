@@ -142,6 +142,9 @@ dmypy.json
 # Profiler files
 *.prof
 
+# Sublime Text workspace files
+*.sublime-workspace
+
 # macOS Finder files
 .*DS_Store*
 
