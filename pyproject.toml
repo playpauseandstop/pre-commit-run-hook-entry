@@ -69,7 +69,7 @@ ignore_missing_imports = true
 
 [tool.poetry]
 name = "pre-commit-run-hook-entry"
-version = "1.0.0b1"
+version = "1.0.0rc0"
 description = "Run pre-commit hook entry. Allow to run pre-commit hooks for text editor formatting / linting needs"
 authors = ["Igor Davydenko <iam@igordavydenko.com>"]
 license = "BSD-3-Clause"
