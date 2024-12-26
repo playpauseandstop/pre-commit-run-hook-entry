@@ -48,8 +48,8 @@ It might be broken after new pre-commit release.
 Requirements
 ============
 
-- `Python <https://www.python.org/>`_ 3.7 or later
-- `pre-commit`_ 2.19.0 or later
+- `Python <https://www.python.org/>`_ 3.9 or later
+- `pre-commit`_ 4.0 or later
 
 License
 =======
@@ -78,6 +78,17 @@ Prerequisites
 ``pre-commit-run-hook-entry`` only works in directories, where
 ``pre-commit run --all HOOK`` is executable.
 
+pre-commit Versions Support
+---------------------------
+
++===================================+=====================+
+| pre-commit-run-hook-entry version | pre-commit version  |
++===================================+=====================+
+| ``1.0.0b0`` or lower              | ``3.8.0`` or lower  |
++-----------------------------------+---------------------+
+| ``1.0.0`` or higher               | ``4.0.0`` or higher |
++-----------------------------------+---------------------+
+
 VS Code Integration
 -------------------
 
@@ -101,6 +112,15 @@ mypy pre-commit hooks for formatting & linting,
 
 Sublime Text 3 Integration
 --------------------------
+
+isorted
+~~~~~~~
+
+.. code-block:: json
+
+    {
+        "isorted.isort_command": ["pre-commit-run-hook-entry", "isort"]
+    }
 
 sublack
 ~~~~~~~

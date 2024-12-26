@@ -24,6 +24,11 @@ lint-and-test: lint test
 .PHONY: list-outdated
 list-outdated: list-outdated-python
 
+.PHONY: shell
+shell: install
+shell:
+	$(PYTHON) -m IPython
+
 .PHONY: test
 test: install clean test-only
 

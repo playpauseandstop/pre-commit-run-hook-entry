@@ -7,7 +7,7 @@ version_type = "semver"
 
 [tool.black]
 line_length = 79
-target_version = ["py37"]
+target_version = ["py39"]
 
 [tool.coverage.run]
 branch = true
@@ -89,16 +89,17 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-pre-commit = ">=2.19.0,<4.0"
+python = "^3.9"
+pre-commit = ">=4.0.0,<5.0"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.0.1"
+ipython = "^8.18.1"
+mypy = "^1.14.0"
 
 [tool.poetry.group.test.dependencies]
-coverage = {extras = ["toml"], version = "^6.5.0"}
+coverage = "^6.5.0"
 coveralls = "^3.3.1"
-pytest = "^7.2.1"
+pytest = "^8.3.4"
 pytest-cov = "^4.0.0"
 
 [tool.poetry.scripts]
@@ -110,7 +111,7 @@ pre-commit-which-hook-entry = "pre_commit_run_hook_entry.cli:main_which"
 "Bug Tracker" = "https://github.com/playpauseandstop/pre-commit-run-hook-entry/issues"
 
 [tool.pytest.ini_options]
-minversion = "7.2.1"
+minversion = "8.3.4"
 testpaths = ["tests/"]
 addopts = "--cov --no-cov-on-fail"
 log_level = "info"
@@ -118,7 +119,7 @@ log_level = "info"
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py311,py311-minimum-requirements
+envlist = py312,py312-minimum-requirements
 skipsdist = True
 
 [gh-actions]
@@ -136,8 +137,8 @@ commands_pre =
 commands =
   python3 -m pytest
 
-[testenv:py311-minimum-requirements]
+[testenv:py312-minimum-requirements]
 commands_pre =
   poetry install --only main,test
-  poetry run python3 -m pip install pre-commit==2.19.0
+  poetry run python3 -m pip install pre-commit==4.0.0
 """
