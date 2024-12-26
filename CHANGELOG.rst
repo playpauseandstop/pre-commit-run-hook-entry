@@ -11,7 +11,6 @@
 **Other:**
 
 - **BREAKING CHANGE:** Update dev Python version to 3.11.1 (#89)
-- **BREAKING CHANGE:** 1.0.0rc0 Release (#104)
 - Sync common project files (#86)
 - Do not install all for tests (#87)
 - Update Python dev version to 3.10.8 (#88)
@@ -19,7 +18,6 @@
 - Bump dev Python version to 3.11.2 (#99)
 - Update CI badge and versions table in README (#103)
 - (**deps-dev**) bump pytest-cov from 4.1.0 to 5.0.0 in the dev-dependencies group (#102)
-- 1.0.0rc0 Release (#105)
 - Setup proper permissions for CI Package reusable workflow call (#106)
 
 1.0.0b1 (2022-08-09)
