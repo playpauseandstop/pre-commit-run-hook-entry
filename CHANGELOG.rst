@@ -1,6 +1,14 @@
 1.0.0 (In Development)
 ======================
 
+1.0.0rc1 (2024-12-27)
+---------------------
+
+**Other:**
+
+- 1.0.0rc0 Release (#108)
+- Disable attestations on publishing to PyPI from reusable workflow (#109)
+
 1.0.0b1 (2022-08-09)
 --------------------
 
